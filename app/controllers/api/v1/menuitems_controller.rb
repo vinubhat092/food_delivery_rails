@@ -1,12 +1,12 @@
 module Api
     module V1
         class MenuitemsController < ApplicationController
-            before_action :set_menuitem,only:[:show,:update,:destroy]
             include TokenAuthentication
-
+            before_action :set_menuitem,only:[:show,:update,:destroy]
+            before_action :authenticate_request,only:[:create,:update,:destroy]
             def index
                 @menuitems = Rails.cache.fetch('menuitems',expires_in:1.minutes) do
-                    Menuitem.all_to_a
+                    Menuitem.all.to_a
                 end
                 render json:@menuitems,status: :ok
             end
@@ -17,12 +17,12 @@ module Api
                     Rails.cache.delete('menuitems')
                     render json:@menuitem,status: :created
                 else
-                    render json:@menuitem.error,status: :unprocessable_entity
+                    render json:@menuitem.errors,status: :unprocessable_entity
                 end
             end
 
             def show
-                @menuitem = Rails.chache.fetch("menuitem_#{params[:id]}",expires_in:1.minutes) do
+                @menuitem = Rails.cache.fetch("menuitem_#{params[:id]}",expires_in:1.minutes) do
                     Menuitem.find(params[:id])
                 end
                 render json:@menuitem,status: :ok
@@ -36,7 +36,7 @@ module Api
                     Rails.cache.delete('menuitems')
                     render json:@menuitem,status: :ok
                 else
-                    render json:@menuitem.error,status: :unprocessable_entity
+                    render json:@menuitem.errors,status: :unprocessable_entity
                 end
             end
 
@@ -56,7 +56,7 @@ module Api
             end
 
             def menuitem_params
-                params.require(:menuitem).permit([:name,:type,:price,:description,:image])
+                params.require(:menuitem).permit([:name,:category,:description,:image])
             end
 
             def allowed_roles

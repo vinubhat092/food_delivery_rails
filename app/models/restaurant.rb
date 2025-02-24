@@ -1,5 +1,6 @@
 class Restaurant < ApplicationRecord
   belongs_to :user
+  has_and_belongs_to_many :menuitems
   has_one_attached :profile_photo
 
   validates :name,presence:true

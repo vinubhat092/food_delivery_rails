@@ -1,6 +1,7 @@
 module Api
     module V1   
         module TokenAuthentication
+            include ActionController::HttpAuthentication::Token
             extend ActiveSupport::Concern
             included do
                 before_action :authenticate_request, only: [:create, :update, :destroy]

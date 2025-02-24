@@ -18,6 +18,9 @@ Rails.application.routes.draw do
       post 'login', to:'login#create'
       resources :users, only:[:index,:show,:update,:destroy]
       resources :restaurants, only:[:index,:show,:create,:update,:destroy]
+      resources :menuitems, only:[:index,:show,:create,:update,:destroy]
+      resources :carts, only:[:index,:create,:update,:destroy]
+      resources :orders, only:[:index,:create,:update,:destroy]
     end
   end
 end
