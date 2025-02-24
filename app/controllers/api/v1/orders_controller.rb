@@ -7,7 +7,7 @@ module Api
 
 
             def index
-                @orders = Order.where(user_id:current_user.id)
+                @orders = Order.where(user_id:current_user.id).where("updated_at >=?",7.days.ago)
                 render json: @orders, status: :ok
             end
 

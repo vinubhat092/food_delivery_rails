@@ -62,9 +62,6 @@ module Api
             def allowed_roles
                 ['admin']
             end 
-            
-            
-            
         end
     end
 end

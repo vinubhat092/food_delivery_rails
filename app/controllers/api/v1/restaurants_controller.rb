@@ -16,7 +16,7 @@ module Api
                         Restaurant.all.to_a
                     end
                 end
-                render json:@restaurants,status: :ok
+                render json:@restaurants.as_json(include: :menuitems),status: :ok
             end
 
             def create

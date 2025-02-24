@@ -7,7 +7,7 @@ module Api
 
             def index
                 @cart = current_user.cart
-                render json:@cart,status: :ok
+                render json:@cart.as_json(include: :cartitems),status: :ok
             end
 
             def create

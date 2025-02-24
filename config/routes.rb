@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       resources :menuitems, only:[:index,:show,:create,:update,:destroy]
       resources :carts, only:[:index,:create,:update,:destroy]
       resources :orders, only:[:index,:create,:update,:destroy]
+      get 'analytics', to: 'analytics#order_stats'
     end
   end
 end
