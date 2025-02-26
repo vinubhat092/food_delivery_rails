@@ -9,4 +9,14 @@ class UserMailer < ApplicationMailer
       format.html { render 'cart_abandoned' }
     end
   end
+
+  def order_successful(user)
+    @user=user
+    mail(
+      to:@user.email,
+      subject: "Your order is succesfully received"
+    ) do |format|
+      format.html { render 'order_successful'}
+    end
+  end
 end 
