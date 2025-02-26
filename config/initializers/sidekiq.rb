@@ -14,9 +14,16 @@ Sidekiq.configure_server do |config|
     else
       Sidekiq.schedule = {
         'abandoned_cart_notification' => {
-          'every' => '1m',
+          'cron' => '* * * * *',
           'class' => 'AbandonedCartNotificationJob',
-          'enabled': true
+          'queue' => 'default',
+          'enabled' => true
+        },
+        'successful_order' => {
+          'cron' => '* * * * *', 
+          'class' => 'SuccessfulOrderJob',
+          'queue' => 'default',
+          'enabled' => true
         }
       }
     end
@@ -27,4 +34,4 @@ end
 
 Sidekiq.configure_client do |config|
   config.redis = { url: ENV.fetch('REDIS_URL', 'redis://localhost:6379/0') }
-end 
+end

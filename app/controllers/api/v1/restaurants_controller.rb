@@ -21,9 +21,12 @@ module Api
 
             def create
                 @restaurant = Restaurant.new(restaurant_params)
+                if params[:restaurant][:menuitem_ids].present?
+                    @restaurant.menuitems = Menuitem.where(id: params[:restaurant][:menuitem_ids])
+                end
                 if @restaurant.save
                     Rails.cache.delete('restaurants')
-                    render json:@restaurant,status: :created
+                    render json:@restaurant.as_json(include: :menuitems),status: :created
                 else
                     render json:@restaurant.errors,status: :unprocessable_entity
                 end
