@@ -1,4 +1,3 @@
-
 Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -16,12 +15,14 @@ Rails.application.routes.draw do
     namespace :v1 do
       post 'registration', to: 'registration#create'
       post 'login', to:'login#create'
+      delete 'logout', to: 'logout#create'
       resources :users, only:[:index,:show,:update,:destroy]
       resources :restaurants, only:[:index,:show,:create,:update,:destroy]
       resources :menuitems, only:[:index,:show,:create,:update,:destroy]
-      resources :carts, only:[:index,:create,:update,:destroy]
+      resources :carts, only:[:index,:create,:update,:destroy,:show]
       resources :orders, only:[:index,:create,:update,:destroy]
       get 'analytics', to: 'analytics#order_stats'
+      post 'logout', to:'logout#create'
     end
   end
 end

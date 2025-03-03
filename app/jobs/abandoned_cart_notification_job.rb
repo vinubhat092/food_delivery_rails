@@ -1,7 +1,6 @@
 class AbandonedCartNotificationJob < ApplicationJob
   queue_as :default
 
-
   def perform
     begin
       carts = Cart.joins(:cartitems)

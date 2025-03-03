@@ -48,7 +48,7 @@ module Api
                     end
                     Rails.cache.delete("restaurant_#{params[:id]}")
                     Rails.cache.delete('restaurants')
-                    render json:@restaurant,status: :ok
+                    render json:@restaurant,status: :created
                 else
                     render json:@restaurant.errors,status: :unprocessable_entity
                 end
