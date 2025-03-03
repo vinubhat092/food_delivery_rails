@@ -24,7 +24,17 @@ Sidekiq.configure_server do |config|
           'class' => 'SuccessfulOrderJob',
           'queue' => 'default',
           'enabled' => true
-        }
+        },
+        'analytics_sync' => {
+          'cron' => '0 * * * *',
+          'class' => 'AnalyticsSyncJob',
+          'queue' => 'analytics'
+        },
+        # 'cleanup_blacklisted_tokens' => {
+        #   'cron' => '0 0 * * *',
+        #   'class' => 'CleanupBlacklistedTokensJob',
+        #   'queue' => 'default'
+        # }
       }
     end
     

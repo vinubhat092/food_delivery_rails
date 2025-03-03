@@ -5,19 +5,29 @@ module Api
   
         def order_stats
           if params[:restaurant_id].present?
-            restaurant = Restaurant.find(params[:restaurant_id])
-            analytics = RestaurantAnalyticsService.new(restaurant)
+            analytics = MongoAnalyticsService.new(params[:restaurant_id].to_i)
+            
+            most_ordered = analytics.most_ordered_items.map do |item|
+              {
+                menuitem_id: item['_id']['menuitem_id'],
+                name: item['_id']['name'],
+                total_orders: item['total_orders']
+              }
+            end
+
+            categories = analytics.category_analytics.map do |cat|
+              {
+                category: cat['_id'],
+                total_orders: cat['total_orders']
+              }
+            end
 
             render json: {
-              most_ordered_items: analytics.most_ordered_items,
-              most_ordered_category: analytics.most_ordered_category,
+              most_ordered_items: most_ordered,
+              category_analytics: categories
             }, status: :ok
           else
-            analytics = GeneralAnalyticsService.new
-            render json: {
-              most_ordered_restaurant: analytics.most_ordered_restaurant,
-              most_ordered_user: analytics.most_ordered_user
-            }, status: :ok
+            render json: { error: 'Restaurant ID is required' }, status: :bad_request
           end
         end
   

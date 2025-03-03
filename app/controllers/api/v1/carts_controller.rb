@@ -3,11 +3,20 @@ module Api
         class CartsController < ApplicationController
             include ActionController::HttpAuthentication::Token
             include TokenAuthentication
-            before_action :authenticate_request,only:[:create,:update,:destroy]
+            before_action :authenticate_request,only:[:create,:update,:destroy,:show]
 
-            def index
-                @cart = current_user.cart
-                render json:@cart.as_json(include: :cartitems),status: :ok
+            # def index
+            #     @carts = current_user.carts
+            #     render json:@carts.as_json(include: :cartitems),status: :ok
+            # end
+
+            def show
+                @cart = current_user.carts.find_by(id:params[:id])
+                if @cart.nil?
+                    render json:{error:"Cart not found"},status: :not_found
+                else
+                    render json:@cart.as_json(include: :cartitems),status: :ok
+                end
             end
 
             def create
@@ -30,18 +39,24 @@ module Api
             end
 
             def update
-                @cart = Cart.find(params[:id])
-                if @cart.update(cart_params)
+                @cart = current_user.carts.find_by(id:params[:id])
+                if @cart.nil?
+                    render json:{error:"Cart not found"},status: :not_found
+                elsif @cart.update(cart_params)
                     render json:@cart,status: :ok
                 else
                     render json:@cart.errors,status: :unprocessable_entity
                 end
             end
 
-            def destroy
-                @cart = Cart.find(params[:id])
-                @cart.destroy
-                head :no_content
+            def destroy 
+                @cart = current_user.carts.find_by(id:params[:id])
+                if @cart.nil?
+                    render json:{error:"Cart not found"},status: :not_found
+                else
+                    @cart.destroy
+                    head :no_content
+                end
             end
 
             private

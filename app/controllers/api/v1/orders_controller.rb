@@ -23,6 +23,7 @@ module Api
 
                     if @order.save
                         @cart.cartitems.destroy_all
+                        SuccessfulOrderJob.perform_later(@order.id)
                         render json: @order.as_json(include: :orderitems), status: :created
                     else
                         render json: @order.errors, status: :unprocessable_entity
